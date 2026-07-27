@@ -109,6 +109,35 @@
 				]
 			},
 			{
+				"category": "Goodies",
+				"entries": [
+					{
+						"environment": {
+							"name": "Environment Variables",
+							"path": "ser/remote-functions/goodies/environment.mdx"
+						}
+					},
+					{
+						"error": {
+							"name": "Error",
+							"path": "ser/remote-functions/goodies/error.mdx"
+						}
+					},
+					{
+						"redirect": {
+							"name": "Redirect",
+							"path": "ser/remote-functions/goodies/redirect.mdx"
+						}
+					},
+					{
+						"invalid": {
+							"name": "Invalid",
+							"path": "ser/remote-functions/goodies/invalid.mdx"
+						}
+					}
+				]
+			},
+			{
 				"name": "Runtimes",
 				"entries": [
 					{

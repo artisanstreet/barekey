@@ -1,0 +1,50 @@
+---
+title: "Error"
+description: "Raise SvelteKit HTTP errors as Effects inside remote handlers."
+---
+
+> [!NOTE] Since 2.3.0
+> The extra-properties overload requires `svelte-effect-runtime` 3.4.3 and
+> SvelteKit 3.
+
+`ts Error` wraps SvelteKit's `ts error` helper as an Effect, so a handler can
+end a request with an HTTP error without leaving Effect control flow. The
+returned Effect never succeeds — SvelteKit takes over the request as soon as
+it runs.
+
+## Raise an HTTP error
+
+```ts name="posts.remote.ts" icon="ts"
+import { Error, Query } from "svelte-effect-runtime";
+import { Effect, Schema } from "effect";
+
+export const GetPost = Query(Schema.String, (id) =>
+	Effect.gen(function* () {
+		const post = yield* PostRepository.find(id);
+
+		if (post === undefined) {
+			return yield* Error("NotFound", "Post not found");
+		}
+
+		return post;
+	}),
+);
+```
+
+The status accepts a number or a PascalCase status name, so
+`ts Error(404, ...)` and `ts Error("NotFound", ...)` are equivalent.
+
+## Attach app error properties
+
+SvelteKit 3 accepts extra properties next to a string message:
+
+```ts name="posts.remote.ts" icon="ts"
+return yield* Error("NotFound", "Post not found", {
+	code: "POST_NOT_FOUND",
+});
+```
+
+> [!TIP] Alias the import when it shadows the global
+> `ts Error` shares its name with JavaScript's built-in error constructor.
+> When a module needs both, alias the import:
+> `ts import { Error as HttpError } from "svelte-effect-runtime"`.

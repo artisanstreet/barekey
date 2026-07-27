@@ -1,0 +1,83 @@
+---
+title: "Environment Variables"
+description: "Declare SvelteKit environment variables with Effect Schema validators."
+---
+
+> [!NOTE] Since 4.2.0
+> `ts DefineEnvVars` requires `svelte-effect-runtime` 4.2.0 and SvelteKit 3's
+> explicit environment variables.
+
+SvelteKit 3 declares environment variables in `icon="ts" src/env.ts` and
+validates every value at startup. `ts DefineEnvVars` is a thin wrapper over
+SvelteKit's `ts defineEnvVars` that lets those declarations use Effect Schema
+directly, so configuration validation speaks the same language as the rest of
+an Effect application.
+
+## Declare variables
+
+Export the declarations as `variables` from `icon="ts" src/env.ts`:
+
+```ts name="src/env.ts" icon="ts"
+import { DefineEnvVars } from "svelte-effect-runtime/environment";
+import { Schema } from "effect";
+
+export const variables = DefineEnvVars({
+	PORT: {
+		schema: Schema.NumberFromString,
+		description: "Port used by the server.",
+	},
+	DATABASE_URL: {
+		schema: Schema.RedactedFromValue(Schema.String),
+	},
+	PUBLIC_ORIGIN: {
+		public: true,
+		static: true,
+		schema: Schema.URLFromString,
+	},
+});
+```
+
+Every SvelteKit field passes through unchanged:
+
+| Field         | Default | Purpose                                                          |
+| ------------- | ------- | ---------------------------------------------------------------- |
+| `public`      | `false` | Exposes the variable to browser code through `$app/env/public`.  |
+| `static`      | `false` | Inlines the build-time value so dead code can be eliminated.     |
+| `description` | —       | Editor hover documentation for the generated export.             |
+| `schema`      | —       | An Effect Schema or Standard Schema decoding the raw string.     |
+
+Effect Schemas are converted with `ts Schema.toStandardSchemaV1`, existing
+Standard Schema validators pass through untouched, and a declaration without a
+schema keeps SvelteKit's non-empty-string default.
+
+> [!IMPORTANT] Schemas decode synchronously
+> SvelteKit rejects asynchronous environment validation, so every schema must
+> decode synchronously from the raw string value.
+
+## Consume decoded values
+
+SvelteKit validates each value once at startup, so the generated exports are
+plain constants with the schema's decoded types. Import them directly — no
+wrapper, no `yield*`:
+
+```ts name="src/lib/server/database.ts" icon="ts"
+import { DATABASE_URL, PORT } from "$app/env/private";
+import { Redacted } from "effect";
+
+export const connect = () =>
+	open_pool({
+		port: PORT,
+		url: Redacted.value(DATABASE_URL),
+	});
+```
+
+`PORT` arrives as a `ts number`, `PUBLIC_ORIGIN` as a `ts URL`, and
+`DATABASE_URL` as a `ts Redacted<string>` that prints as `<redacted>` if it
+ever reaches a log line or serialized output. SvelteKit keeps ownership of
+loading, visibility, and the server-only import guard: importing
+`$app/env/private` from browser code fails the build.
+
+> [!TIP] Secrets stay redacted by default
+> Declaring a private value with `ts Schema.RedactedFromValue` means the secret
+> is wrapped before your code ever sees it. Unwrapping with
+> `ts Redacted.value(...)` is explicit and easy to audit.
