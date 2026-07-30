@@ -1,0 +1,40 @@
+---
+title: "Invalid"
+description: "Fail form submissions with typed, field-addressed validation errors."
+---
+
+> [!NOTE] Since 2.0.0
+> `ts invalid` is part of the Form handler input on every supported version.
+
+Every Form handler receives an `ts invalid` proxy next to the validated
+`ts data`. Calling a path on the proxy produces an Effect that fails with a
+typed `ts FormError` addressed to that exact field, which SvelteKit routes back
+to the form as a field issue.
+
+## Reject a field
+
+```ts name="items.remote.ts" icon="ts"
+import { Form } from "svelte-effect-runtime";
+import { Effect, Schema } from "effect";
+
+export const CreateItem = Form(ItemSchema, ({ data, invalid }) =>
+	Effect.gen(function* () {
+		if (data.items[0]?.label === "blocked") {
+			return yield* invalid.items[0]!.label("Blocked labels are rejected.");
+		}
+
+		return { message: `saved:${data.name}` };
+	}),
+);
+```
+
+The proxy mirrors the shape of the validated input, so paths are fully typed:
+`ts invalid.email("Use an email address.")` for a flat field,
+`ts invalid.items[0]!.label("...")` for nested collections. The produced
+failure lands on the Form's error channel as a `ts FormError`, and the message
+appears on the matching field in the browser.
+
+> [!TIP] Validation belongs in the schema first
+> Reach for `ts invalid` when a rule needs server-side context — uniqueness,
+> permissions, cross-record checks. Shape and format rules belong in the Form's
+> Effect Schema, where they also run in the browser.
