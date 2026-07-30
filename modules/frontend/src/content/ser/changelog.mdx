@@ -3,6 +3,41 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.0
+
+### Environment variables are declared with Effect Schema
+
+`DefineEnvVars` describes SvelteKit's explicit environment variables with Effect Schema validators. Effect Schemas are converted to the Standard Schema interface SvelteKit validates at startup, so a declared variable reaches your application already decoded to its target type. Standard Schema validators and schema-less declarations pass through unchanged, and SvelteKit remains responsible for loading, visibility, and validation. Schemas must decode synchronously from the raw string value.
+
+```ts
+// src/env.ts
+import { DefineEnvVars } from "svelte-effect-runtime/environment";
+import { Schema } from "effect";
+
+export const variables = DefineEnvVars({
+	PORT: { schema: Schema.NumberFromString, description: "Server port." },
+	PUBLIC_ORIGIN: { public: true, schema: Schema.URLFromString },
+});
+```
+
+### Unencodable remote failures explain themselves
+
+A remote handler whose failure SER cannot send to the client used to produce a bare 500 with nothing on the server to explain it. SER now reports why the failure was replaced, the request it happened in, the failure itself with its stack, and the full Effect cause, along with the change that would make it transportable.
+
+This covers failures without a tagged error, failures that cannot be serialized, causes carrying only a defect, and handlers interrupted mid-request — the last of which commonly appears when a dev server restart disposes the runtime while a request is still in flight. What reaches the browser is unchanged.
+
+### Fixes
+
+- Event handler work is bound to its component scope again, so destroying a component interrupts the effects its handlers started.
+- A scoped promise failure no longer reaches callers twice, once as a rejection and once as an uncaught error.
+- Disposing a component scope releases values cached under dependency keys that had since been superseded.
+- `{@html}` no longer renders a server fallback in place of its raw output.
+- Server transforms no longer import `onDestroy`, which they never referenced.
+
+### Supported SvelteKit versions
+
+SvelteKit 3 prereleases are supported through `ts 3.0.0-next.8`. Later prereleases change how an application is laid out rather than how SER integrates with it: `ts 3.0.0-next.9` removed the `$lib` alias in favour of package subpath imports, and `ts 3.0.0-next.12` moved SvelteKit's generated tsconfig and environment types. SER's own SvelteKit surface is unchanged across these releases and its peer range already admits them, but the conformance suite does not yet pass against them.
+
 ## 4.1.1
 
 ### Editor scope diagnostics are fixed
