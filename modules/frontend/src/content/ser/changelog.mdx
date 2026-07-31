@@ -3,6 +3,18 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.1
+
+### Remote functions no longer read the request event
+
+4.2.0 built a diagnostic context before running every remote handler, reading `ts event.route` and `ts event.url` to describe requests that might later fail. SvelteKit derives a restricted event for remote functions and, inside a `ts query`, defines `ts url`, `ts params`, and `ts route` as getters that throw, so a query's cache can only depend on its arguments. Every query therefore failed before its handler ran, answering with an internal error while the HTTP status stayed 200.
+
+The context is now resolved only when a failure is actually reported, so a successful call never touches the request event, and each detail is read defensively because which properties a remote function may observe has changed across SvelteKit releases.
+
+### Bare yield\* statements survive leading comments
+
+A comment directly above a bare `ts yield*` statement was captured as part of the lowered expression, which defeated the anchored strip that removes the original `ts yield*` and left a second one nested inside the generated `ts ToEffect` argument.
+
 ## 4.2.0
 
 ### Environment variables are declared with Effect Schema
