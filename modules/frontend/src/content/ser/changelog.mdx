@@ -16,6 +16,10 @@ A bare `ts yield*` statement with a comment directly above it lost part of its l
 </script>
 ```
 
+### Remote failure reports read the request event lazily
+
+The reporting context for unencodable remote failures is now resolved only when a report is actually rendered. Every remote call used to read `ts request`, `ts route`, and `ts url` from the request event merely to describe the few calls that fail, and a request event that restricts those properties could disturb a handler that had already succeeded. A restricted event now neither slows nor breaks successful calls, and a failure report still includes whatever context the event allows.
+
 ## 4.2.0
 
 ### Environment variables are declared with Effect Schema
