@@ -3,6 +3,19 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.1
+
+### Commented bare yield* statements are lowered correctly
+
+A bare `ts yield*` statement with a comment directly above it lost part of its lowering: the comment rode into the generated effect argument and kept the original `ts yield*` with it, so the component failed at runtime with `yield* (intermediate value) is not iterable` instead of running the effect. The comment is now excluded from the lowered expression, and such statements execute like any other bare `ts yield*`.
+
+```ser
+<script lang="ts" effect>
+	/** A failed first load is expected and already answered. */
+	yield* RefreshThreads.pipe(Effect.ignore);
+</script>
+```
+
 ## 4.2.0
 
 ### Environment variables are declared with Effect Schema
