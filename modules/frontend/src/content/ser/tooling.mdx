@@ -143,4 +143,40 @@ Both are available from the extensions tab in your code editor.
 ## Skills
 
 If you use AI, we provide a skill file that teaches your agent how to use SER and how to understand its syntax.
-It is [available to download from the SER repository](https://github.com/usebarekey/svelte-effect-runtime/tree/master/skills/svelte-effect-runtime).
+
+Install it with the skills CLI:
+
+<CommandPicker.Root
+	id="install-ser-skill"
+	default_value="npx"
+	select_label="Install skill"
+	storage_key="skill-install-command"
+>
+	<CommandPicker.Item
+		value="npx"
+		label="npx"
+		icon="npm"
+		command="npx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="pnpm"
+		label="pnpm"
+		icon="pnpm"
+		command="pnpm dlx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="bun"
+		label="Bun"
+		icon="bun"
+		command="bunx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="yarn"
+		label="Yarn"
+		icon="yarn"
+		command="yarn dlx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+</CommandPicker.Root>
+
+You can also [download the skill directory from the SER repository](https://github.com/usebarekey/svelte-effect-runtime/tree/master/skills/svelte-effect-runtime).
+Keep `SKILL.md` and its `references/` directory together when installing it manually. The skill is also listed on [skills.sh](https://skills.sh/usebarekey/svelte-effect-runtime/svelte-effect-runtime).
