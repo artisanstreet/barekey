@@ -144,21 +144,15 @@ Install it with the skills CLI:
 
 <CommandPicker.Root
 	id="install-ser-skill"
-	default_value="npx"
+	default_value="deno"
 	select_label="Install skill"
-	storage_key="skill-install-command"
+	storage_key="package-manager"
 >
 	<CommandPicker.Item
-		value="npx"
-		label="npx"
-		icon="npm"
-		command="npx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
-	/>
-	<CommandPicker.Item
-		value="pnpm"
-		label="pnpm"
-		icon="pnpm"
-		command="pnpm dlx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+		value="deno"
+		label="Deno"
+		icon="deno"
+		command="deno run -A npm:skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
 	/>
 	<CommandPicker.Item
 		value="bun"
@@ -167,10 +161,40 @@ Install it with the skills CLI:
 		command="bunx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
 	/>
 	<CommandPicker.Item
+		value="pnpm"
+		label="pnpm"
+		icon="pnpm"
+		command="pnpm dlx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="npm"
+		label="npm"
+		icon="npm"
+		command="npx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
 		value="yarn"
 		label="Yarn"
 		icon="yarn"
 		command="yarn dlx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="nub"
+		label="Nub"
+		icon="nub"
+		command="nubx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="aube"
+		label="Aube"
+		icon="aube"
+		command="aubx skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
+	/>
+	<CommandPicker.Item
+		value="vlt"
+		label="vlt"
+		icon="vlt"
+		command="vlt exec-cache install skills &amp;&amp; vlt exec skills add usebarekey/svelte-effect-runtime --skill svelte-effect-runtime"
 	/>
 </CommandPicker.Root>
 
