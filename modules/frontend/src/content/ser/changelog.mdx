@@ -3,6 +3,29 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.2
+
+### Compiler correctness fixes found by fuzzing
+
+Top-level yield-star declarations now retain their export modifiers after
+lowering. Dependency collection now ignores declaration names, handles computed
+property names and parameter defaults, and respects block and loop scope, so
+reactive effects keep the dependencies they actually use without generating
+reads of undeclared names. Event callback extraction now parses the callback
+syntax instead of searching for the first arrow, so nested arrows no longer
+hide an invalid yield-star or truncate the generated handler.
+
+The compiler and runtime now have property-based fuzz suites covering transform
+composition, dependency collection, source scanning, dispatcher lifecycles,
+yieldable boundaries, and remote failure transport. The fuzz workload runs from
+its own dispatch-only workflow.
+
+### Strict SER guidance
+
+The SER skill has been rebuilt around strict Effect execution rules and focused
+references for component syntax, Effect discipline, remote functions, runtime
+and environment setup, tooling, and the error catalog.
+
 ## 4.2.1
 
 ### Remote functions no longer read the request event
