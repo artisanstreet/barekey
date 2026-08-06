@@ -3,6 +3,30 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.3
+
+### Superseded value cells are released immediately
+
+When a markup yield's dependencies change, its cache entry re-keys. The cell
+stored under the superseded key was previously released only while still
+pending, so a settled cell survived until the owning component unmounted. In
+long-lived components whose yields re-key on rapidly changing state — a
+streaming conversation view, for example — every change permanently retained
+one settled cell along with its cached value, reactive source, and the fiber
+records its production chain pinned, and invalidation of those orphaned cells
+surfaced as Svelte `derived_inert` errors once their components were destroyed.
+
+Superseded cells are now released as soon as the dependencies re-key, matching
+how promise caching already behaved. Dependencies that flip back to a prior
+value re-run the effect instead of resurfacing the stale cached result.
+
+### Scoped value reads publish their results
+
+A value read started inside a component scope could fail to track its fiber,
+leaving the read stuck on its fallback. Scope-bound value work is now tracked
+and published correctly, and a value fiber whose launch is superseded before it
+starts is interrupted instead of running detached until the scope closes.
+
 ## 4.2.2
 
 ### Compiler correctness fixes found by fuzzing
