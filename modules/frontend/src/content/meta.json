@@ -130,12 +130,6 @@
 						}
 					},
 					{
-						"redirect": {
-							"name": "Redirect",
-							"path": "ser/remote-functions/goodies/redirect.mdx"
-						}
-					},
-					{
 						"invalid": {
 							"name": "Invalid",
 							"path": "ser/remote-functions/goodies/invalid.mdx"
