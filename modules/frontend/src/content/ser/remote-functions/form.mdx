@@ -57,9 +57,11 @@ The exported value keeps SvelteKit's native form attributes:
 
 This remains an HTML form. The server handler must be correct without client JavaScript, even when you add enhancement later.
 
-## Return field errors
+## Return validation issues
 
-The handler receives a `ts invalid` proxy whose shape follows the input. Yield a field path to return a validation issue:
+The handler receives an effect-aware `ts invalid` proxy whose shape follows the
+decoded input. Calling the proxy creates a validation issue at that path and
+fails the effect, so yield or return it like any other effect:
 
 ```ts name="profile.remote.ts" icon="ts"
 export const update_profile = Form(ProfileInput, ({ data, invalid }) =>
@@ -80,9 +82,41 @@ export const update_profile = Form(ProfileInput, ({ data, invalid }) =>
 );
 ```
 
-For nested objects and arrays, continue through the proxy, such as `ts invalid.address.city(...)` or `ts invalid.items[0].name(...)`.
+The path controls where SvelteKit displays the issue:
 
-Schema validation runs before the handler. Use `ts invalid` for checks that depend on business rules or several fields together.
+- `ts invalid("Profile could not be saved")` creates a form-level issue.
+- `ts invalid.email("Enter a valid email address")` creates a field issue.
+- `ts invalid.address.city("City is required")` follows nested objects.
+- `ts invalid.items[0].name("Name is required")` follows array items.
+
+Each call stops the handler through the Effect error channel. Use `ts return yield*`
+when the branch ends there, or plain `ts yield*` when the surrounding generator
+cannot continue:
+
+```ts name="profile.remote.ts" icon="ts"
+if (yield * EmailRepository.is_taken(data.email)) {
+	return yield * invalid.email("That email is already in use");
+}
+```
+
+Schema validation runs before the handler. Use `ts invalid` for validation that
+depends on application state, business rules, or relationships between fields.
+
+### `invalid` and `issue`
+
+SvelteKit's native form callback receives an `ts issue` builder and expects it
+to be passed to SvelteKit's `ts invalid(...)` function. SER exposes both callback
+arguments for compatibility, but its `ts invalid` argument is a different,
+Effect-aware wrapper:
+
+| Helper                               | Purpose                                                                                                                                             |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ts invalid.email("Already in use")` | Builds a typed issue and fails the current effect in one step. Prefer this in SER handlers.                                                         |
+| `ts issue.email("Already in use")`   | Builds SvelteKit's native issue value without failing the effect. Use it only when interoperating with an API that expects native SvelteKit issues. |
+
+Most SER handlers do not need `ts issue`. In particular, do not build an issue
+and then pass it to SER's `ts invalid`; SER's wrapper accepts a message and
+builds the issue itself.
 
 ## Submit from effect code
 
