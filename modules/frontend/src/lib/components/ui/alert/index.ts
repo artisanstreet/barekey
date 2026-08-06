@@ -1,8 +1,8 @@
-import Root from "$lib/components/ui/alert/alert.sv";
-import Description from "$lib/components/ui/alert/alert-description.sv";
-import Title from "$lib/components/ui/alert/alert-title.sv";
-import Action from "$lib/components/ui/alert/alert-action.sv";
-export { alert_variants, type AlertVariant } from "$lib/components/ui/alert/alert.sv";
+import Root from "$lib/components/ui/alert/alert.svelte";
+import Description from "$lib/components/ui/alert/alert-description.svelte";
+import Title from "$lib/components/ui/alert/alert-title.svelte";
+import Action from "$lib/components/ui/alert/alert-action.svelte";
+export { alert_variants, type AlertVariant } from "$lib/components/ui/alert/alert.svelte";
 
 export {
 	Action,

@@ -8,10 +8,10 @@
 		"build": "vp exec vite build",
 		"preview": "vp exec vite preview",
 		"prepare": "svelte-kit sync || echo ''",
-		"check": "vp fmt . --check && vp lint vite.config.ts src/app.d.ts src/hooks.server.ts src/lib tests __tests__ && vp exec vite build && vp exec vitest run",
+		"check": "vp fmt . --check && vp lint --ignore-pattern \"**/*.svelte\" vite.config.ts src/app.d.ts src/hooks.server.ts src/lib tests __tests__ && vp exec vite build && vp exec vitest run",
 		"check:watch": "vp exec vitest watch",
 		"fmt": "vp fmt . --write",
-		"lint": "vp lint vite.config.ts src/app.d.ts src/hooks.server.ts src/lib tests __tests__",
+		"lint": "vp lint --ignore-pattern \"**/*.svelte\" vite.config.ts src/app.d.ts src/hooks.server.ts src/lib tests __tests__",
 		"test": "vp exec vitest run"
 	},
 	"dependencies": {
@@ -22,8 +22,8 @@
 		"html-escaper": "^3.0.3",
 		"posthog-js": "^1.399.1",
 		"shiki": "^4.3.0",
-		"svelte-effect-runtime": "4.0.0",
-		"svelte-effect-runtime-grammars": "4.0.0"
+		"svelte-effect-runtime": "4.2.3",
+		"svelte-effect-runtime-grammars": "4.2.3"
 	},
 	"devDependencies": {
 		"@internationalized/date": "^3.12.2",
@@ -53,7 +53,6 @@
 		"svelte-global-typescript": "^1.0.1",
 		"svelte-plugin-composer": "^1.0.1",
 		"svelte-sonner": "^1.1.1",
-		"svelte-sv-extension": "^1.0.1",
 		"sveltekit-superforms": "^2.30.1",
 		"tailwind-merge": "^3.6.0",
 		"tailwind-variants": "^3.2.2",

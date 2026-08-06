@@ -2,11 +2,11 @@ import { readFileSync } from "node:fs";
 import { expect, test } from "vitest";
 
 const docs_frame = readFileSync(
-	"src/routes/docs/[category]/[slug]/components/docs-page-frame.sv",
+	"src/routes/docs/[category]/[slug]/components/docs-page-frame.svelte",
 	"utf8",
 );
 const docs_scroll_reset = readFileSync(
-	"src/routes/docs/[category]/[slug]/components/docs-scroll-reset.sv",
+	"src/routes/docs/[category]/[slug]/components/docs-scroll-reset.svelte",
 	"utf8",
 );
 
@@ -17,7 +17,7 @@ test("laptop-width docs use the desktop layout", () => {
 
 test("desktop docs sidebar has a stable server-rendered width", () => {
 	const docs_sidebar = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-sidebar.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-sidebar.svelte",
 		"utf8",
 	);
 
@@ -28,7 +28,7 @@ test("desktop docs sidebar has a stable server-rendered width", () => {
 
 test("desktop sidebar reuses the article scroll-edge fade", () => {
 	const docs_sidebar = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-sidebar.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-sidebar.svelte",
 		"utf8",
 	);
 
@@ -66,7 +66,7 @@ test("docs card inset preserves inner rounding and outer shadows", () => {
 
 test("compact docs layout uses a sticky branded glass header", () => {
 	const mobile_header = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-mobile-header.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-mobile-header.svelte",
 		"utf8",
 	);
 
@@ -100,7 +100,7 @@ test("docs viewport follows mobile browser chrome and resets after navigation", 
 
 test("mobile table of contents tracks document scrolling", () => {
 	const table_of_contents = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-table-of-contents.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-table-of-contents.svelte",
 		"utf8",
 	);
 
@@ -110,7 +110,7 @@ test("mobile table of contents tracks document scrolling", () => {
 });
 
 test("mobile documentation drawer is an edge-attached panel with a visible close button", () => {
-	const sidebar = readFileSync("src/lib/components/ui/sidebar/sidebar.sv", "utf8");
+	const sidebar = readFileSync("src/lib/components/ui/sidebar/sidebar.svelte", "utf8");
 	const sidebar_css = readFileSync("src/lib/styles/sidebar.css", "utf8");
 
 	expect(sidebar).toContain("inset-y-2 left-0 h-auto");
@@ -125,7 +125,7 @@ test("mobile documentation drawer is an edge-attached panel with a visible close
 });
 
 test("mobile documentation drawer uses interruptible panel motion", () => {
-	const sidebar = readFileSync("src/lib/components/ui/sidebar/sidebar.sv", "utf8");
+	const sidebar = readFileSync("src/lib/components/ui/sidebar/sidebar.svelte", "utf8");
 	const sidebar_css = readFileSync("src/lib/styles/sidebar.css", "utf8");
 
 	expect(sidebar).toContain('motion="none"');
@@ -139,7 +139,7 @@ test("mobile documentation drawer uses interruptible panel motion", () => {
 
 test("mobile documentation drawer closes after selecting a page", () => {
 	const docs_sidebar = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-sidebar.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-sidebar.svelte",
 		"utf8",
 	);
 
@@ -149,7 +149,7 @@ test("mobile documentation drawer closes after selecting a page", () => {
 
 test("mobile documentation drawer aligns its brand with the navigation heading", () => {
 	const docs_sidebar = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-sidebar.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-sidebar.svelte",
 		"utf8",
 	);
 
@@ -160,7 +160,7 @@ test("mobile documentation drawer aligns its brand with the navigation heading",
 
 test("long page titles wrap at semantic boundaries without overflowing", () => {
 	const docs_article = readFileSync(
-		"src/routes/docs/[category]/[slug]/components/docs-article.sv",
+		"src/routes/docs/[category]/[slug]/components/docs-article.svelte",
 		"utf8",
 	);
 	const headings_css = readFileSync("src/lib/styles/prose/headings.css", "utf8");

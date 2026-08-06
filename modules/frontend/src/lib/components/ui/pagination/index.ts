@@ -1,12 +1,12 @@
-import Root from "$lib/components/ui/pagination/pagination.sv";
-import Content from "$lib/components/ui/pagination/pagination-content.sv";
-import Item from "$lib/components/ui/pagination/pagination-item.sv";
-import Link from "$lib/components/ui/pagination/pagination-link.sv";
-import PrevButton from "$lib/components/ui/pagination/pagination-prev-button.sv";
-import NextButton from "$lib/components/ui/pagination/pagination-next-button.sv";
-import Ellipsis from "$lib/components/ui/pagination/pagination-ellipsis.sv";
-import Previous from "$lib/components/ui/pagination/pagination-previous.sv";
-import Next from "$lib/components/ui/pagination/pagination-next.sv";
+import Root from "$lib/components/ui/pagination/pagination.svelte";
+import Content from "$lib/components/ui/pagination/pagination-content.svelte";
+import Item from "$lib/components/ui/pagination/pagination-item.svelte";
+import Link from "$lib/components/ui/pagination/pagination-link.svelte";
+import PrevButton from "$lib/components/ui/pagination/pagination-prev-button.svelte";
+import NextButton from "$lib/components/ui/pagination/pagination-next-button.svelte";
+import Ellipsis from "$lib/components/ui/pagination/pagination-ellipsis.svelte";
+import Previous from "$lib/components/ui/pagination/pagination-previous.svelte";
+import Next from "$lib/components/ui/pagination/pagination-next.svelte";
 
 export {
 	Content,

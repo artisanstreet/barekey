@@ -1,10 +1,10 @@
-import Root from "$lib/components/ui/breadcrumb/breadcrumb.sv";
-import Ellipsis from "$lib/components/ui/breadcrumb/breadcrumb-ellipsis.sv";
-import Item from "$lib/components/ui/breadcrumb/breadcrumb-item.sv";
-import Separator from "$lib/components/ui/breadcrumb/breadcrumb-separator.sv";
-import Link from "$lib/components/ui/breadcrumb/breadcrumb-link.sv";
-import List from "$lib/components/ui/breadcrumb/breadcrumb-list.sv";
-import Page from "$lib/components/ui/breadcrumb/breadcrumb-page.sv";
+import Root from "$lib/components/ui/breadcrumb/breadcrumb.svelte";
+import Ellipsis from "$lib/components/ui/breadcrumb/breadcrumb-ellipsis.svelte";
+import Item from "$lib/components/ui/breadcrumb/breadcrumb-item.svelte";
+import Separator from "$lib/components/ui/breadcrumb/breadcrumb-separator.svelte";
+import Link from "$lib/components/ui/breadcrumb/breadcrumb-link.svelte";
+import List from "$lib/components/ui/breadcrumb/breadcrumb-list.svelte";
+import Page from "$lib/components/ui/breadcrumb/breadcrumb-page.svelte";
 
 export {
 	Ellipsis,

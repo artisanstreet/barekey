@@ -1,13 +1,13 @@
-import Root from "$lib/components/ui/item/item.sv";
-import Group from "$lib/components/ui/item/item-group.sv";
-import Separator from "$lib/components/ui/item/item-separator.sv";
-import Header from "$lib/components/ui/item/item-header.sv";
-import Footer from "$lib/components/ui/item/item-footer.sv";
-import Content from "$lib/components/ui/item/item-content.sv";
-import Title from "$lib/components/ui/item/item-title.sv";
-import Description from "$lib/components/ui/item/item-description.sv";
-import Actions from "$lib/components/ui/item/item-actions.sv";
-import Media from "$lib/components/ui/item/item-media.sv";
+import Root from "$lib/components/ui/item/item.svelte";
+import Group from "$lib/components/ui/item/item-group.svelte";
+import Separator from "$lib/components/ui/item/item-separator.svelte";
+import Header from "$lib/components/ui/item/item-header.svelte";
+import Footer from "$lib/components/ui/item/item-footer.svelte";
+import Content from "$lib/components/ui/item/item-content.svelte";
+import Title from "$lib/components/ui/item/item-title.svelte";
+import Description from "$lib/components/ui/item/item-description.svelte";
+import Actions from "$lib/components/ui/item/item-actions.svelte";
+import Media from "$lib/components/ui/item/item-media.svelte";
 
 export {
 	Actions,

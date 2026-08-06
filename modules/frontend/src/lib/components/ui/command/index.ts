@@ -1,14 +1,14 @@
-import Root from "$lib/components/ui/command/command.sv";
-import Loading from "$lib/components/ui/command/command-loading.sv";
-import Dialog from "$lib/components/ui/command/command-dialog.sv";
-import Empty from "$lib/components/ui/command/command-empty.sv";
-import Group from "$lib/components/ui/command/command-group.sv";
-import Item from "$lib/components/ui/command/command-item.sv";
-import Input from "$lib/components/ui/command/command-input.sv";
-import List from "$lib/components/ui/command/command-list.sv";
-import Separator from "$lib/components/ui/command/command-separator.sv";
-import Shortcut from "$lib/components/ui/command/command-shortcut.sv";
-import LinkItem from "$lib/components/ui/command/command-link-item.sv";
+import Root from "$lib/components/ui/command/command.svelte";
+import Loading from "$lib/components/ui/command/command-loading.svelte";
+import Dialog from "$lib/components/ui/command/command-dialog.svelte";
+import Empty from "$lib/components/ui/command/command-empty.svelte";
+import Group from "$lib/components/ui/command/command-group.svelte";
+import Item from "$lib/components/ui/command/command-item.svelte";
+import Input from "$lib/components/ui/command/command-input.svelte";
+import List from "$lib/components/ui/command/command-list.svelte";
+import Separator from "$lib/components/ui/command/command-separator.svelte";
+import Shortcut from "$lib/components/ui/command/command-shortcut.svelte";
+import LinkItem from "$lib/components/ui/command/command-link-item.svelte";
 
 export {
 	Dialog,

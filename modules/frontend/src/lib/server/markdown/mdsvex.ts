@@ -294,19 +294,19 @@ const InjectCommandPickerHighlighting = (content: string) =>
 	});
 
 const markdown_component_imports = [
-	'import CodeSnippet from "$lib/components/markdown/code-snippet.sv";',
-	'import CopyButton from "$lib/components/markdown/copy-button.sv";',
-	'import FileIcon from "$lib/components/markdown/file-icon.sv";',
-	'import InlineCodeIcon from "$lib/components/markdown/inline-code-icon.sv";',
-	'import InlineHighlightedCode from "$lib/components/markdown/inline-highlighted-code.sv";',
-	'import NoteHeader from "$lib/components/markdown/note-header.sv";',
+	'import CodeSnippet from "$lib/components/markdown/code-snippet.svelte";',
+	'import CopyButton from "$lib/components/markdown/copy-button.svelte";',
+	'import FileIcon from "$lib/components/markdown/file-icon.svelte";',
+	'import InlineCodeIcon from "$lib/components/markdown/inline-code-icon.svelte";',
+	'import InlineHighlightedCode from "$lib/components/markdown/inline-highlighted-code.svelte";',
+	'import NoteHeader from "$lib/components/markdown/note-header.svelte";',
 ].join("\n");
 
 const frontmatter_pattern = /^---\s*[\r\n][\s\S]*?[\r\n]---\s*[\r\n]?/;
 const opening_script_pattern = /^\s*<script\b[^>]*>/;
 
 const inject_markdown_component_imports = (content: string) => {
-	if (content.includes('"$lib/components/markdown/code-snippet.sv"')) {
+	if (content.includes('"$lib/components/markdown/code-snippet.svelte"')) {
 		return content;
 	}
 

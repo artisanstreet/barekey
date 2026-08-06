@@ -5,7 +5,6 @@ import { mdsvex } from "mdsvex";
 import { href } from "svelte-auto-href";
 import { effect } from "svelte-effect-runtime/compiler";
 import { ts } from "svelte-global-typescript";
-import { sv } from "svelte-sv-extension";
 import { include_og_types, og, serverless_chromium } from "svelte-build-og/vite";
 import { compose, kit } from "svelte-plugin-composer";
 import { defineConfig } from "vite";
@@ -37,7 +36,6 @@ export default defineConfig({
 		compose(
 			[
 				effect(),
-				sv(),
 				ts(),
 				href(),
 				kit({
@@ -54,7 +52,7 @@ export default defineConfig({
 							"https://barekey.dev",
 					},
 					typescript: { config: include_og_types },
-					extensions: [".sv", ".svelte", ...mdsvex_extensions],
+					extensions: [".svelte", ...mdsvex_extensions],
 					preprocess: [command_picker_preprocessor(), mdsvex(markdown_mdsvex_options)],
 					compilerOptions: {
 						experimental: {

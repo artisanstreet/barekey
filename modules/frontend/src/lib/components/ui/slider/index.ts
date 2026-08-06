@@ -1,3 +1,3 @@
-import Root from "$lib/components/ui/slider/slider.sv";
+import Root from "$lib/components/ui/slider/slider.svelte";
 
 export { Root, Root as Slider };

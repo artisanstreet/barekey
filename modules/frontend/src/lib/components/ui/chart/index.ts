@@ -1,5 +1,5 @@
-import ChartContainer from "$lib/components/ui/chart/chart-container.sv";
-import ChartTooltip from "$lib/components/ui/chart/chart-tooltip.sv";
+import ChartContainer from "$lib/components/ui/chart/chart-container.svelte";
+import ChartTooltip from "$lib/components/ui/chart/chart-tooltip.svelte";
 
 export {
 	type ChartConfig,

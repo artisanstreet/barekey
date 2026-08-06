@@ -1,14 +1,14 @@
-import Root from "$lib/components/ui/drawer/drawer.sv";
-import Content from "$lib/components/ui/drawer/drawer-content.sv";
-import Description from "$lib/components/ui/drawer/drawer-description.sv";
-import Overlay from "$lib/components/ui/drawer/drawer-overlay.sv";
-import Footer from "$lib/components/ui/drawer/drawer-footer.sv";
-import Header from "$lib/components/ui/drawer/drawer-header.sv";
-import Title from "$lib/components/ui/drawer/drawer-title.sv";
-import NestedRoot from "$lib/components/ui/drawer/drawer-nested.sv";
-import Close from "$lib/components/ui/drawer/drawer-close.sv";
-import Trigger from "$lib/components/ui/drawer/drawer-trigger.sv";
-import Portal from "$lib/components/ui/drawer/drawer-portal.sv";
+import Root from "$lib/components/ui/drawer/drawer.svelte";
+import Content from "$lib/components/ui/drawer/drawer-content.svelte";
+import Description from "$lib/components/ui/drawer/drawer-description.svelte";
+import Overlay from "$lib/components/ui/drawer/drawer-overlay.svelte";
+import Footer from "$lib/components/ui/drawer/drawer-footer.svelte";
+import Header from "$lib/components/ui/drawer/drawer-header.svelte";
+import Title from "$lib/components/ui/drawer/drawer-title.svelte";
+import NestedRoot from "$lib/components/ui/drawer/drawer-nested.svelte";
+import Close from "$lib/components/ui/drawer/drawer-close.svelte";
+import Trigger from "$lib/components/ui/drawer/drawer-trigger.svelte";
+import Portal from "$lib/components/ui/drawer/drawer-portal.svelte";
 
 export {
 	Close,
