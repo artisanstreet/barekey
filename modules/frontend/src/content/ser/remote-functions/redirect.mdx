@@ -1,0 +1,102 @@
+---
+title: "Redirect"
+description: "Hand navigation back to SvelteKit from an effect."
+---
+
+`ts Redirect` is SER's effect-aware wrapper around SvelteKit's redirect control
+flow. Yield it when a remote handler or HTTP handler should stop and send the
+request to another location.
+
+```ts name="account.remote.ts" icon="ts"
+import { Command, Redirect } from "svelte-effect-runtime";
+
+export const delete_account = Command(function* () {
+	yield* AccountRepository.remove_current();
+
+	return yield* Redirect("SeeOther", "/goodbye");
+});
+```
+
+The redirect is terminal: code after it does not run. It is SvelteKit control
+flow rather than a typed domain failure, so it does not become a recoverable
+error value for the remote caller.
+
+## Choose a status
+
+Pass either a numeric redirect status or one of SER's named statuses:
+
+```ts
+yield * Redirect(303, "/account");
+yield * Redirect("SeeOther", "/account");
+yield * Redirect("TemporaryRedirect", new URL("/maintenance", event.url));
+```
+
+Common choices are:
+
+| Status                           | Typical use                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| `ts "SeeOther"` (`303`)          | Navigate after a successful form or mutation. The following request uses `GET`. |
+| `ts "Found"` (`302`)             | A temporary redirect where existing method semantics are acceptable.            |
+| `ts "TemporaryRedirect"` (`307`) | Temporarily move a request while preserving its method and body.                |
+| `ts "PermanentRedirect"` (`308`) | Permanently move a request while preserving its method and body.                |
+| `ts "MovedPermanently"` (`301`)  | Permanently move a `GET` resource.                                              |
+
+Prefer a named status when it communicates the intent more clearly than the
+number.
+
+## Redirect after a form
+
+A successful form submission commonly uses `ts "SeeOther"` so refreshing the
+destination does not submit the form again:
+
+```ts name="post.remote.ts" icon="ts"
+import { Effect, Schema } from "effect";
+import { Form, Redirect } from "svelte-effect-runtime";
+
+const PostInput = Schema.Struct({
+	title: Schema.String,
+});
+
+export const create_post = Form(PostInput, ({ data }) =>
+	Effect.gen(function* () {
+		const post = yield* PostRepository.create(data);
+
+		return yield* Redirect("SeeOther", `/posts/${post.slug}`);
+	}),
+);
+```
+
+Return validation feedback with the form's
+[`ts invalid` wrapper](/docs/ser/form#invalid-and-issue) before redirecting. Only
+redirect after the mutation succeeds.
+
+## External destinations
+
+Internal application paths need no options. When using SvelteKit 3's external
+redirect support, pass the third argument:
+
+```ts
+yield *
+	Redirect("SeeOther", "https://accounts.example.com/sign-in", {
+		external: true,
+	});
+```
+
+You can also pass an allowlist of external origins:
+
+```ts
+yield *
+	Redirect("SeeOther", destination, {
+		external: ["https://accounts.example.com"],
+	});
+```
+
+Keep external destinations fixed or allowlisted. Do not redirect directly to an
+untrusted URL supplied by the request.
+
+## Where it works
+
+Use `ts Redirect` inside `ts Query`, `ts Command`, `ts Form`, `ts Prerender`, or
+[`ts Handler`](/docs/ser/handler). Use typed Effect failures for expected domain
+outcomes that callers should handle; use `ts Redirect` when SvelteKit should
+take over navigation.

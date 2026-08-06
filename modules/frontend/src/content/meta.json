@@ -95,6 +95,12 @@
 							"name": "RequestEvent",
 							"path": "ser/remote-functions/request-event.mdx"
 						}
+					},
+					{
+						"redirect": {
+							"name": "Redirect",
+							"path": "ser/remote-functions/redirect.mdx"
+						}
 					}
 				]
 			},
