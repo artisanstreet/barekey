@@ -1,11 +1,11 @@
-import Root from "$lib/components/ui/navigation-menu/navigation-menu.sv";
-import Content from "$lib/components/ui/navigation-menu/navigation-menu-content.sv";
-import Indicator from "$lib/components/ui/navigation-menu/navigation-menu-indicator.sv";
-import Item from "$lib/components/ui/navigation-menu/navigation-menu-item.sv";
-import Link from "$lib/components/ui/navigation-menu/navigation-menu-link.sv";
-import List from "$lib/components/ui/navigation-menu/navigation-menu-list.sv";
-import Trigger from "$lib/components/ui/navigation-menu/navigation-menu-trigger.sv";
-import Viewport from "$lib/components/ui/navigation-menu/navigation-menu-viewport.sv";
+import Root from "$lib/components/ui/navigation-menu/navigation-menu.svelte";
+import Content from "$lib/components/ui/navigation-menu/navigation-menu-content.svelte";
+import Indicator from "$lib/components/ui/navigation-menu/navigation-menu-indicator.svelte";
+import Item from "$lib/components/ui/navigation-menu/navigation-menu-item.svelte";
+import Link from "$lib/components/ui/navigation-menu/navigation-menu-link.svelte";
+import List from "$lib/components/ui/navigation-menu/navigation-menu-list.svelte";
+import Trigger from "$lib/components/ui/navigation-menu/navigation-menu-trigger.svelte";
+import Viewport from "$lib/components/ui/navigation-menu/navigation-menu-viewport.svelte";
 
 export {
 	Content,

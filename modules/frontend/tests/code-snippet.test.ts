@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { render } from "svelte/server";
 import { expect, test } from "vitest";
 
-import CodeSnippet from "$lib/components/markdown/code-snippet.sv";
-import InlineCodeIcon from "$lib/components/markdown/inline-code-icon.sv";
+import CodeSnippet from "$lib/components/markdown/code-snippet.svelte";
+import InlineCodeIcon from "$lib/components/markdown/inline-code-icon.svelte";
 
 const code_snippet_styles = readFileSync(
 	"src/lib/styles/markdown/components/code-snippet.css",

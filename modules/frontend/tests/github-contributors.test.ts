@@ -74,7 +74,7 @@ test("falls back to immediate contributor and co-author data while stats are com
 
 test("serves generated contributor data through a dedicated ISR route", () => {
 	const route = readFileSync("src/routes/api/github/contributors/+server.ts", "utf8");
-	const component = readFileSync("src/lib/components/custom/contributors.sv", "utf8");
+	const component = readFileSync("src/lib/components/custom/contributors.svelte", "utf8");
 
 	expect(route).toContain("expiration: 3_600");
 	expect(route).toContain("FetchGithubContributors");
@@ -86,7 +86,7 @@ test("serves generated contributor data through a dedicated ISR route", () => {
 });
 
 test("spaces the Barekey member mark with font-native whitespace", () => {
-	const component = readFileSync("src/lib/components/custom/contributor-card.sv", "utf8");
+	const component = readFileSync("src/lib/components/custom/contributor-card.svelte", "utf8");
 
 	expect(component).toContain('{" "}');
 	expect(component).not.toContain("gap-[1ch]");

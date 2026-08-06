@@ -1,7 +1,7 @@
-import Root from "$lib/components/ui/accordion/accordion.sv";
-import Content from "$lib/components/ui/accordion/accordion-content.sv";
-import Item from "$lib/components/ui/accordion/accordion-item.sv";
-import Trigger from "$lib/components/ui/accordion/accordion-trigger.sv";
+import Root from "$lib/components/ui/accordion/accordion.svelte";
+import Content from "$lib/components/ui/accordion/accordion-content.svelte";
+import Item from "$lib/components/ui/accordion/accordion-item.svelte";
+import Trigger from "$lib/components/ui/accordion/accordion-trigger.svelte";
 
 export {
 	Content,

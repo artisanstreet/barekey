@@ -1,15 +1,15 @@
-import Root from "$lib/components/ui/alert-dialog/alert-dialog.sv";
-import Portal from "$lib/components/ui/alert-dialog/alert-dialog-portal.sv";
-import Trigger from "$lib/components/ui/alert-dialog/alert-dialog-trigger.sv";
-import Title from "$lib/components/ui/alert-dialog/alert-dialog-title.sv";
-import Action from "$lib/components/ui/alert-dialog/alert-dialog-action.sv";
-import Cancel from "$lib/components/ui/alert-dialog/alert-dialog-cancel.sv";
-import Footer from "$lib/components/ui/alert-dialog/alert-dialog-footer.sv";
-import Header from "$lib/components/ui/alert-dialog/alert-dialog-header.sv";
-import Overlay from "$lib/components/ui/alert-dialog/alert-dialog-overlay.sv";
-import Content from "$lib/components/ui/alert-dialog/alert-dialog-content.sv";
-import Description from "$lib/components/ui/alert-dialog/alert-dialog-description.sv";
-import Media from "$lib/components/ui/alert-dialog/alert-dialog-media.sv";
+import Root from "$lib/components/ui/alert-dialog/alert-dialog.svelte";
+import Portal from "$lib/components/ui/alert-dialog/alert-dialog-portal.svelte";
+import Trigger from "$lib/components/ui/alert-dialog/alert-dialog-trigger.svelte";
+import Title from "$lib/components/ui/alert-dialog/alert-dialog-title.svelte";
+import Action from "$lib/components/ui/alert-dialog/alert-dialog-action.svelte";
+import Cancel from "$lib/components/ui/alert-dialog/alert-dialog-cancel.svelte";
+import Footer from "$lib/components/ui/alert-dialog/alert-dialog-footer.svelte";
+import Header from "$lib/components/ui/alert-dialog/alert-dialog-header.svelte";
+import Overlay from "$lib/components/ui/alert-dialog/alert-dialog-overlay.svelte";
+import Content from "$lib/components/ui/alert-dialog/alert-dialog-content.svelte";
+import Description from "$lib/components/ui/alert-dialog/alert-dialog-description.svelte";
+import Media from "$lib/components/ui/alert-dialog/alert-dialog-media.svelte";
 
 export {
 	Action,

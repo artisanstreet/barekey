@@ -13,7 +13,7 @@ test("renders compact commands from a clone of the highlighted source", () => {
 
 test("uses the copy-button surface treatment for the package-manager trigger", () => {
 	const command_picker = readFileSync(
-		"src/lib/components/markdown/command-picker/command-picker.sv",
+		"src/lib/components/markdown/command-picker/command-picker.svelte",
 		"utf8",
 	);
 

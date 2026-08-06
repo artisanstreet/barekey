@@ -49,8 +49,8 @@ describe("package documentation", () => {
 
 	it("renders the docs OG card with Tailwind and a preloaded font asset", async () => {
 		const [card, route, server_route] = await Promise.all([
-			read_source("src/lib/components/og/og-card.sv"),
-			read_source("src/routes/og/docs/[category]/[slug]/+page.sv"),
+			read_source("src/lib/components/og/og-card.svelte"),
+			read_source("src/routes/og/docs/[category]/[slug]/+page.svelte"),
 			read_source("src/routes/og/docs/[category]/[slug]/+page.server.ts"),
 		]);
 

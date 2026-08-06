@@ -1,6 +1,6 @@
-import Root from "$lib/components/ui/native-select/native-select.sv";
-import Option from "$lib/components/ui/native-select/native-select-option.sv";
-import OptGroup from "$lib/components/ui/native-select/native-select-opt-group.sv";
+import Root from "$lib/components/ui/native-select/native-select.svelte";
+import Option from "$lib/components/ui/native-select/native-select-option.svelte";
+import OptGroup from "$lib/components/ui/native-select/native-select-opt-group.svelte";
 
 export {
 	OptGroup,

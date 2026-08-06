@@ -1,3 +1,3 @@
-import Root from "$lib/components/ui/separator/separator.sv";
+import Root from "$lib/components/ui/separator/separator.svelte";
 
 export { Root, Root as Separator };

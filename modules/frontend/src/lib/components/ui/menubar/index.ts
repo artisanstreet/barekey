@@ -1,20 +1,20 @@
-import Root from "$lib/components/ui/menubar/menubar.sv";
-import Menu from "$lib/components/ui/menubar/menubar-menu.sv";
-import Sub from "$lib/components/ui/menubar/menubar-sub.sv";
-import RadioGroup from "$lib/components/ui/menubar/menubar-radio-group.sv";
-import CheckboxItem from "$lib/components/ui/menubar/menubar-checkbox-item.sv";
-import Content from "$lib/components/ui/menubar/menubar-content.sv";
-import Item from "$lib/components/ui/menubar/menubar-item.sv";
-import Group from "$lib/components/ui/menubar/menubar-group.sv";
-import RadioItem from "$lib/components/ui/menubar/menubar-radio-item.sv";
-import Separator from "$lib/components/ui/menubar/menubar-separator.sv";
-import Shortcut from "$lib/components/ui/menubar/menubar-shortcut.sv";
-import SubContent from "$lib/components/ui/menubar/menubar-sub-content.sv";
-import SubTrigger from "$lib/components/ui/menubar/menubar-sub-trigger.sv";
-import Trigger from "$lib/components/ui/menubar/menubar-trigger.sv";
-import Label from "$lib/components/ui/menubar/menubar-label.sv";
-import GroupHeading from "$lib/components/ui/menubar/menubar-group-heading.sv";
-import Portal from "$lib/components/ui/menubar/menubar-portal.sv";
+import Root from "$lib/components/ui/menubar/menubar.svelte";
+import Menu from "$lib/components/ui/menubar/menubar-menu.svelte";
+import Sub from "$lib/components/ui/menubar/menubar-sub.svelte";
+import RadioGroup from "$lib/components/ui/menubar/menubar-radio-group.svelte";
+import CheckboxItem from "$lib/components/ui/menubar/menubar-checkbox-item.svelte";
+import Content from "$lib/components/ui/menubar/menubar-content.svelte";
+import Item from "$lib/components/ui/menubar/menubar-item.svelte";
+import Group from "$lib/components/ui/menubar/menubar-group.svelte";
+import RadioItem from "$lib/components/ui/menubar/menubar-radio-item.svelte";
+import Separator from "$lib/components/ui/menubar/menubar-separator.svelte";
+import Shortcut from "$lib/components/ui/menubar/menubar-shortcut.svelte";
+import SubContent from "$lib/components/ui/menubar/menubar-sub-content.svelte";
+import SubTrigger from "$lib/components/ui/menubar/menubar-sub-trigger.svelte";
+import Trigger from "$lib/components/ui/menubar/menubar-trigger.svelte";
+import Label from "$lib/components/ui/menubar/menubar-label.svelte";
+import GroupHeading from "$lib/components/ui/menubar/menubar-group-heading.svelte";
+import Portal from "$lib/components/ui/menubar/menubar-portal.svelte";
 
 export {
 	CheckboxItem,

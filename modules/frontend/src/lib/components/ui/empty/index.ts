@@ -1,9 +1,9 @@
-import Root from "$lib/components/ui/empty/empty.sv";
-import Header from "$lib/components/ui/empty/empty-header.sv";
-import Media from "$lib/components/ui/empty/empty-media.sv";
-import Title from "$lib/components/ui/empty/empty-title.sv";
-import Description from "$lib/components/ui/empty/empty-description.sv";
-import Content from "$lib/components/ui/empty/empty-content.sv";
+import Root from "$lib/components/ui/empty/empty.svelte";
+import Header from "$lib/components/ui/empty/empty-header.svelte";
+import Media from "$lib/components/ui/empty/empty-media.svelte";
+import Title from "$lib/components/ui/empty/empty-title.svelte";
+import Description from "$lib/components/ui/empty/empty-description.svelte";
+import Content from "$lib/components/ui/empty/empty-content.svelte";
 
 export {
 	Content,

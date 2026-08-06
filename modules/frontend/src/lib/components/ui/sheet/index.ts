@@ -1,13 +1,13 @@
-import Root from "$lib/components/ui/sheet/sheet.sv";
-import Portal from "$lib/components/ui/sheet/sheet-portal.sv";
-import Trigger from "$lib/components/ui/sheet/sheet-trigger.sv";
-import Close from "$lib/components/ui/sheet/sheet-close.sv";
-import Overlay from "$lib/components/ui/sheet/sheet-overlay.sv";
-import Content from "$lib/components/ui/sheet/sheet-content.sv";
-import Header from "$lib/components/ui/sheet/sheet-header.sv";
-import Footer from "$lib/components/ui/sheet/sheet-footer.sv";
-import Title from "$lib/components/ui/sheet/sheet-title.sv";
-import Description from "$lib/components/ui/sheet/sheet-description.sv";
+import Root from "$lib/components/ui/sheet/sheet.svelte";
+import Portal from "$lib/components/ui/sheet/sheet-portal.svelte";
+import Trigger from "$lib/components/ui/sheet/sheet-trigger.svelte";
+import Close from "$lib/components/ui/sheet/sheet-close.svelte";
+import Overlay from "$lib/components/ui/sheet/sheet-overlay.svelte";
+import Content from "$lib/components/ui/sheet/sheet-content.svelte";
+import Header from "$lib/components/ui/sheet/sheet-header.svelte";
+import Footer from "$lib/components/ui/sheet/sheet-footer.svelte";
+import Title from "$lib/components/ui/sheet/sheet-title.svelte";
+import Description from "$lib/components/ui/sheet/sheet-description.svelte";
 
 export {
 	Close,

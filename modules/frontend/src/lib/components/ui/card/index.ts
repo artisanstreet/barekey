@@ -1,10 +1,10 @@
-import Root from "$lib/components/ui/card/card.sv";
-import Content from "$lib/components/ui/card/card-content.sv";
-import Description from "$lib/components/ui/card/card-description.sv";
-import Footer from "$lib/components/ui/card/card-footer.sv";
-import Header from "$lib/components/ui/card/card-header.sv";
-import Title from "$lib/components/ui/card/card-title.sv";
-import Action from "$lib/components/ui/card/card-action.sv";
+import Root from "$lib/components/ui/card/card.svelte";
+import Content from "$lib/components/ui/card/card-content.svelte";
+import Description from "$lib/components/ui/card/card-description.svelte";
+import Footer from "$lib/components/ui/card/card-footer.svelte";
+import Header from "$lib/components/ui/card/card-header.svelte";
+import Title from "$lib/components/ui/card/card-title.svelte";
+import Action from "$lib/components/ui/card/card-action.svelte";
 
 export {
 	Action,
