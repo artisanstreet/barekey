@@ -15,6 +15,12 @@ Vite takes care of the bookkeeping. During the transform, SER replaces each supp
 
 The Dispatcher gives that operation a managed fiber. When a reactive input changes, it interrupts the old fiber and starts again with the latest values, so stale work cannot wander back in later.
 
+> [!NOTE] Since 4.2.4
+> Each top-level reactive execution owns its own Effect scope. Invalidating the
+> execution closes that scope, so work started with `ts Effect.forkScoped` is
+> interrupted and finalized before the next run. Component destruction remains
+> the backstop for any run that is still active.
+
 Events follow a slightly different rhythm. Script and markup operations return their values to Svelte, whereas each event starts a fresh fiber when it fires.
 
 [Follow the generated operation through the Dispatcher](/docs/ser/dispatcher) to see how it handles cache identity and cleanup.
