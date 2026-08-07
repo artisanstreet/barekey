@@ -3,6 +3,20 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.4
+
+### Reactive runs release their scoped children
+
+Each top-level reactive SER execution now owns a child Effect scope. When
+Svelte invalidates the statement, SER closes that run scope, interrupting work
+started with `ts Effect.forkScoped` and running its finalizers before the next
+execution takes over. Completed setup effects can still leave scoped work
+running until invalidation, while typed setup failures and defects close their
+run immediately. Component destruction remains the final backstop.
+
+This prevents reactive subscriptions, fibers, latches, closures, and finalizers
+from accumulating in long-lived components as their inputs change.
+
 ## 4.2.3
 
 ### Superseded value cells are released immediately
