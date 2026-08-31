@@ -19,6 +19,11 @@ identifier expected by SvelteKit's newer wire format. Effect-backed
 server runtime while SvelteKit materializes their remote payloads, avoiding a
 build-time endpoint 500.
 
+Live query rendering no longer assumes that SvelteKit stores transport hooks
+on each request. SvelteKit 3 keeps those hooks outside the request state; SER
+now falls back to its standard snapshot encoding instead of throwing while
+rendering a page that contains a live query.
+
 ## 4.2.4
 
 ### Reactive runs release their scoped children
