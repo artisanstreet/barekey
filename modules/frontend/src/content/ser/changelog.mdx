@@ -3,6 +3,22 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.5
+
+### SvelteKit 3 prereleases through next.25
+
+SER now supports SvelteKit `ts 3.0.0-next.25` while retaining its SvelteKit 2
+compatibility. Remote-function and environment types no longer depend on
+declarations that moved out of SvelteKit's root package in `ts next.20`, and
+validation failures continue to work across the temporary removal of
+`ts isValidationError` in `ts next.21` and `ts next.22`.
+
+Remote form fallback submissions now suffix every field with the action
+identifier expected by SvelteKit's newer wire format. Effect-backed
+`ts Prerender` input generators and handlers also run through the configured
+server runtime while SvelteKit materializes their remote payloads, avoiding a
+build-time endpoint 500.
+
 ## 4.2.4
 
 ### Reactive runs release their scoped children
