@@ -13,6 +13,10 @@ declarations that moved out of SvelteKit's root package in `ts next.20`, and
 validation failures continue to work across the temporary removal of
 `ts isValidationError` in `ts next.21` and `ts next.22`.
 
+Generated remote client modules are now wrapped whether SvelteKit imports its
+virtual remote entry or the relative runtime entry introduced in `ts next.25`,
+so `ts yield*` continues to receive an Effect-aware remote resource.
+
 Remote form fallback submissions now suffix every field with the action
 identifier expected by SvelteKit's newer wire format. Effect-backed
 `ts Prerender` input generators and handlers also run through the configured
