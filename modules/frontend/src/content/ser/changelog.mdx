@@ -3,6 +3,21 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.7
+
+### Adapters that externalize production dependencies
+
+SvelteKit adapter prereleases released alongside SvelteKit `ts 3.0.0-next.28`,
+including `ts @sveltejs/adapter-bun@1.0.0-next.3` and
+`ts @sveltejs/adapter-node@6.0.0-next.13`, externalize every package listed in
+the app's `ts dependencies`. That overrode SER's bundling of its own runtime,
+so the server build imported SER from `ts node_modules` and failed with
+`ts Cannot find module '$app/server'`.
+
+SER now keeps its runtime bundled into the server build even when an adapter
+externalizes it, while leaving the adapter's other externals intact. Moving
+`ts svelte-effect-runtime` to `ts devDependencies` is no longer necessary.
+
 ## 4.2.6
 
 ### Publication after the organization rename
