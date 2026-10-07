@@ -5,7 +5,11 @@ description: "Trace a SvelteKit request-context failure normalized at an SER rem
 
 ## What this error means and what can trigger it
 
-`RemoteHelperContextError` means a native SvelteKit remote helper or request lookup reported that it was running outside its route/request context. This commonly follows a declaration outside a valid `*.remote.ts` route module or execution in tooling that does not establish SvelteKit's request store.
+`RemoteHelperContextError` means a native SvelteKit remote helper or request lookup reported that it was running outside its route/request context. This commonly follows a declaration outside a valid remote module or execution in tooling that does not establish SvelteKit's request store.
+
+> [!NOTE] Since 4.2.8
+> SER recognizes `ts remote.ts` alongside `ts data.remote.ts`. Either filename
+> can declare remote functions when your SvelteKit version supports it.
 
 SER has to recognize this condition by its message because SvelteKit does not expose a stable error class for an `ts instanceof` check. The accepted messages begin with `Can only read the current request event inside functions invoked during handle` or exactly match `Could not get the request store.` Consequently, a user-thrown `Error` carrying the same text is classified in the same way.
 

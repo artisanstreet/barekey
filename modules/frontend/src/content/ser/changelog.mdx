@@ -3,6 +3,15 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 4.2.8
+
+### Remote filename detection
+
+SER now recognizes `ts remote.ts` alongside `ts data.remote.ts` and other
+filenames with a `ts remote` segment. Server imports, Prerender context
+injection, and client Effect adapters use the same filename check. A remote
+segment in a directory name or Vite query no longer triggers these transforms.
+
 ## 4.2.7
 
 ### Adapters that externalize production dependencies

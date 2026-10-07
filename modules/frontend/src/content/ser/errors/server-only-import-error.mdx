@@ -9,7 +9,11 @@ description: "Trace a root server helper that reached its defensive placeholder 
 
 The root contains function placeholders for `ts Query`, `ts Query.batch`, `ts Query.live`, `ts Command`, `ts Error`, `ts Form`, `ts Prerender`, `ts Redirect`, `ts RequestEvent`, and `ts get_server_runtime_or_throw`; `ts ServerRuntime.make` uses a class placeholder instead. Those placeholders are reachable when the SER Vite plugin is missing, when a file falls outside the recognized server naming conventions, or when tooling executes the module without Vite's transform.
 
-The rewrite recognizes `*.server.ts`, `*.remote.ts`, their module-suffix variants, and `hooks.server.ts`. It handles static imports, re-exports, and literal dynamic imports.
+> [!NOTE] Since 4.2.8
+> Remote filename detection also recognizes `ts remote.ts` and filenames with
+> a `ts remote` segment, such as `ts data.remote.test.ts`.
+
+The rewrite recognizes those remote modules, `*.server.ts`, its module-suffix variants, and `hooks.server.ts`. It handles static imports, re-exports, and literal dynamic imports.
 
 ## Exactly where it triggers
 
