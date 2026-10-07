@@ -7,7 +7,11 @@ SER wraps SvelteKit remote functions so their server handlers return effects and
 
 ## Define a query
 
-Create a `.remote.ts` file next to your page:
+> [!NOTE] Since 4.2.8
+> SER also recognizes `ts remote.ts` and other filenames with a `ts remote`
+> segment supported by your SvelteKit version.
+
+Create a `ts profile.remote.ts` or `ts remote.ts` file next to your page:
 
 ```ts name="src/routes/profile.remote.ts" icon="ts"
 import { Effect, Schema } from "effect";
