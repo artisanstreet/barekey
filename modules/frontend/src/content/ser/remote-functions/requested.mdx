@@ -1,0 +1,168 @@
+---
+title: "Requested"
+description: "Answer the query refreshes a client asked a command or form to perform."
+---
+
+> [!NOTE] Since 5.0.0
+> `ts Requested` requires `svelte-effect-runtime` 5.0.0. It answers the
+> refreshes a client lists with `ts .updates(...)`, which SvelteKit sends with
+> the command or form request.
+
+A mutation usually changes data that some query on the page is showing. Rather
+than waiting for the mutation to finish and then refetching, the client can ask
+the server to send fresh query data back in the same response. SvelteKit calls
+this a single-flight mutation.
+
+There are two halves. The client picks the queries at the call site with
+`ts .updates(...)`, and the server decides what to do with each of them through
+`ts Requested`.
+
+```ser name="new-post.svelte" icon="svelte"
+<script lang="ts" effect>
+	import { CreatePost, GetPosts } from "./posts.remote";
+
+	let { draft } = $props();
+</script>
+
+<button onclick={yield* CreatePost(draft).updates(GetPosts)}>Publish</button>
+```
+
+```ts name="posts.remote.ts" icon="ts"
+import { Effect, Schema } from "effect";
+import { Command, Query, Requested } from "svelte-effect-runtime";
+import { Posts } from "$lib/server/posts";
+
+const PostInput = Schema.Struct({
+	author: Schema.String,
+	title: Schema.String,
+});
+
+export const GetPosts = Query(Schema.Struct({ author: Schema.String }), ({ author }) =>
+	Effect.gen(function* () {
+		const posts = yield* Posts;
+
+		return yield* posts.list_by(author);
+	}),
+);
+
+export const CreatePost = Command(PostInput, (input) =>
+	Effect.gen(function* () {
+		const posts = yield* Posts;
+
+		yield* posts.create(input);
+
+		for (const { arg, query, ignore } of yield* Requested(GetPosts, 10)) {
+			yield* arg.author === input.author ? query.refresh() : ignore;
+		}
+	}),
+);
+```
+
+Each `ts .updates(...)` argument the client sends becomes one entry, and the
+handler chooses whether it refreshes, sets, or ignores that entry.
+
+## Entries
+
+`ts Requested(query, limit)` returns an Effect that produces one entry per
+requested instance of `ts query`:
+
+| Field       | Meaning                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `ts arg`    | The query argument, after the query's own schema validated it.                                                     |
+| `ts query`  | The query bound to that client's cache entry. `ts query.refresh()` and `ts query.set(value)` are Effects to yield. |
+| `ts ignore` | An Effect that explicitly declines this entry.                                                                     |
+
+Because `ts query` is bound to the client's argument, refreshing it runs the
+query handler for that exact argument. Setting it skips the handler and sends
+the value you already have:
+
+```ts name="posts.remote.ts" icon="ts"
+export const RenamePost = Command(RenameInput, ({ slug, title }) =>
+	Effect.gen(function* () {
+		const posts = yield* Posts;
+		const post = yield* posts.rename(slug, title);
+
+		for (const { arg, query, ignore } of yield* Requested(GetPost, 5)) {
+			yield* arg === slug ? query.set(post) : ignore;
+		}
+	}),
+);
+```
+
+Pass a live query to receive live entries instead. Their `ts query` is a live
+stream, so reconnect it with `ts Live.reconnect`:
+
+```ts name="rooms.remote.ts" icon="ts"
+export const PostMessage = Command(MessageInput, ({ room_id, text }) =>
+	Effect.gen(function* () {
+		const rooms = yield* Rooms;
+
+		yield* rooms.post(room_id, text);
+
+		for (const { arg, query, ignore } of yield* Requested(WatchRoom, 5)) {
+			yield* arg === room_id ? Live.reconnect(query) : ignore;
+		}
+	}),
+);
+```
+
+## The limit
+
+The client decides which instances to request, so `ts limit` is required and
+caps how much work one mutation can be asked to do. Instances past the limit
+are not processed, and they fail on the client. Choose the smallest number the
+page can legitimately need.
+
+## Shorthands
+
+When every requested instance should be treated the same way, use a shorthand.
+Each one returns an Effect:
+
+```ts name="posts.remote.ts" icon="ts"
+export const PublishPost = Command(Schema.String, (slug) =>
+	Effect.gen(function* () {
+		const posts = yield* Posts;
+
+		yield* posts.publish(slug);
+
+		yield* Requested.refreshAll(GetPosts, 1);
+		yield* Requested.reconnectAll(GetNotifications, 1);
+		yield* Requested.ignoreAll(GetArchivedPosts, 10);
+	}),
+);
+```
+
+- `ts Requested.refreshAll(query, limit)` refreshes every requested instance of a
+  query or batch query.
+- `ts Requested.reconnectAll(query, limit)` reconnects every requested instance
+  of a live query.
+- `ts Requested.ignoreAll(query, limit)` declines every requested instance.
+
+Forms use the same helpers:
+
+```ts name="posts.remote.ts" icon="ts"
+export const CreatePostForm = Form(PostInput, ({ data }) =>
+	Effect.gen(function* () {
+		const posts = yield* Posts;
+
+		yield* posts.create(data);
+		yield* Requested.refreshAll(GetPosts, 1);
+	}),
+);
+```
+
+## SvelteKit 3 requires an answer
+
+On SvelteKit 3, every instance the client requests must be refreshed, set,
+reconnected, or ignored. An instance the handler leaves unanswered fails on the
+client. Yield `ts ignore` (or `ts Requested.ignoreAll`) for anything you do not
+want to send back.
+
+On SvelteKit 2, unanswered requests are silently skipped, and
+`ts Requested.ignoreAll` only consumes them.
+
+## Where it works
+
+`ts Requested` is server-only and is valid inside [Command](/docs/ser/command)
+and [Form](/docs/ser/form) handlers, which are the requests that can carry
+`ts .updates(...)`.

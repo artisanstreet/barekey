@@ -111,6 +111,8 @@ Available on every query call result:
 - `current` – last successful value (or `undefined`)
 - `loading`, `ready`, `error`
 - `ts refresh()` – returns an effect that forces a refetch
+- `ts set(value)` – returns an effect that replaces the cached value
+- `ts withOverride(update)` – returns an effect that applies an optimistic value
 
 ```ser icon="svelte" name="+page.svelte"
 <script effect>
@@ -138,6 +140,70 @@ Call `ts .refresh()` to invalidate the cached value and fetch fresh data:
 
 > [!WARNING]
 > SER creates a fresh wrapper object for every call (`ts GetPosts() !== GetPosts()`). The underlying SvelteKit cache is still shared by argument. Do not compare call results with `ts ===`.
+
+## Setting and overriding
+
+> [!NOTE] Since 5.0.0
+> `ts set(value)` and `ts withOverride(update)` return effects. Before 5.0.0
+> they acted as soon as they were called; now a discarded call does nothing.
+
+`ts set(value)` replaces the cached value for that argument without running the
+handler. Like `ts refresh()`, it is an effect, so yield it:
+
+```ser icon="svelte" name="+page.svelte"
+<script lang="ts" effect>
+	import { GetPosts } from "./post.remote.ts";
+</script>
+
+<button onclick={yield* GetPosts().set([])}>
+	Clear list
+</button>
+```
+
+Inside a [Command](/docs/ser/command) or [Form](/docs/ser/form) handler,
+`ts query.set(value)` and `ts query.refresh()` send the new data back with the
+mutation's response:
+
+```ts icon="ts" name="post.remote.ts"
+export const RenamePost = Command(RenameInput, ({ slug, title }) =>
+	Effect.gen(function* () {
+		const post = yield* PostRepository.rename(slug, title);
+
+		yield* GetPost(slug).set(post);
+	}),
+);
+```
+
+[Requested](/docs/ser/requested) answers the queries the client asked a
+mutation to refresh.
+
+`ts withOverride(update)` shows an optimistic value until the real one arrives.
+It returns an `ts EffectRemoteQueryOverride`, which you can use in two ways:
+
+- Pass it un-yielded to a command's `ts .updates(...)`. The override applies
+  when the command runs and is released when the command settles.
+- Yield it to apply the override immediately. The yielded value is the release
+  function; call it when the override should end.
+
+```ser icon="svelte" name="new-post.svelte"
+<script lang="ts" effect>
+	import { CreatePost, GetPosts } from "./post.remote.ts";
+
+	let { draft } = $props();
+</script>
+
+<button
+	onclick={yield* CreatePost(draft).updates(
+		GetPosts().withOverride((posts) => [draft, ...posts]),
+	)}
+>
+	Publish
+</button>
+```
+
+To move existing code to 5.0.0, put `ser yield*` in front of every `ts set` and
+standalone `ts withOverride` call. Overrides passed to `ts .updates(...)` keep
+working unchanged.
 
 ## Deduplication
 

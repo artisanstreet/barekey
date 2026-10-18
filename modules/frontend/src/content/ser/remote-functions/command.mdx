@@ -72,7 +72,7 @@ Model recoverable server failures in the effect error channel, then handle them 
 					message = "Archived";
 				}),
 			),
-			Effect.catchAll(() =>
+			Effect.catch(() =>
 				Effect.sync(() => {
 					message = "Could not archive this project";
 				}),
@@ -85,6 +85,55 @@ Model recoverable server failures in the effect error channel, then handle them 
 ```
 
 Keep expected domain errors distinct from validation and transport errors so the UI can choose a useful recovery path.
+
+## Update queries in the same request
+
+A command's call result has an `ts .updates(...)` method. List the queries the
+mutation affects, and their fresh data comes back with the command's response
+instead of in a second round trip:
+
+```ser name="project-row.svelte" icon="svelte"
+<button onclick={yield* archive_project({ project_id }).updates(list_projects)}>
+	Archive
+</button>
+```
+
+On the server, answer those requests with [Requested](/docs/ser/requested), or
+set a query directly:
+
+```ts name="projects.remote.ts" icon="ts"
+export const archive_project = Command(ArchiveProjectInput, ({ project_id }) =>
+	Effect.gen(function* () {
+		const project = yield* ProjectRepository.archive(project_id);
+
+		yield* get_project(project_id).set(project);
+		yield* Requested.refreshAll(list_projects, 1);
+
+		return { project_id, archived: true };
+	}),
+);
+```
+
+> [!NOTE] Since 5.0.0
+> `ts query.set(value)` and `ts query.withOverride(update)` are effects. Yield
+> `ts set`, and pass a `ts withOverride` effect to `ts .updates(...)` to apply an
+> optimistic value while the command runs.
+
+```ser name="project-row.svelte" icon="svelte"
+<button
+	onclick={yield* archive_project({ project_id }).updates(
+		list_projects().withOverride((projects) =>
+			projects.filter((project) => project.id !== project_id),
+		),
+	)}
+>
+	Archive
+</button>
+```
+
+The override applies when the command starts and is released when it settles.
+See [Setting and overriding](/docs/ser/query#setting-and-overriding) for the
+query side.
 
 ## Read request data
 

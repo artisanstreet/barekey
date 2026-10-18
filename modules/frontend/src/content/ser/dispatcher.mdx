@@ -87,6 +87,23 @@ Call it once, before component effects begin. Later calls throw `ts RuntimeAlrea
 
 ## During server rendering
 
-During SSR, generated component code uses the server Dispatcher. The browser Dispatcher does not start during that render.
+> [!NOTE] Since 5.0.0
+> The server Dispatcher runs awaited component effects instead of returning
+> their fallback, and releases each component's scope once the render ends.
 
-Reactive markup receives its server fallback. An await block either remains pending or receives an SSR fallback, depending on the generated context. After hydration, client effect sites use the client Dispatcher.
+During SSR, generated component code uses the server Dispatcher, which runs effects on the [server runtime](/docs/ser/server-runtime). The browser Dispatcher does not start during that render.
+
+Awaited script and markup effects run on the server, so their values are part of the HTML. An effect that fails renders its SSR fallback. `ser {#await yield* ...}` blocks remain pending and resolve in the browser.
+
+Once the render finishes, the server Dispatcher closes each component's scope, interrupting leftover work and running its finalizers.
+
+While the page hydrates, the client Dispatcher runs those effects again, just as Svelte reruns a native `ts await`. An effect wrapped in [`ts Hydratable`](/docs/ser/hydratable) instead reuses the result the server embedded in the page. After hydration, client effect sites behave as described above.
+
+## Aborts and forks
+
+> [!NOTE] Since 5.0.0
+> Pending fibers follow Svelte's abort signal and `ts fork()`.
+
+Each awaited effect reads the abort signal of the derived or block that started it. When Svelte aborts that work, because the derived reruns, an `svelte {#if}` branch closes, or a keyed block is replaced, the Dispatcher interrupts the pending fiber.
+
+The effect's expression is evaluated synchronously when Svelte asks for it, so an update inside `ts fork()` passes its speculative state to the effect. If the fork commits, Svelte keeps the value that was already produced and the Dispatcher does not run the effect again.

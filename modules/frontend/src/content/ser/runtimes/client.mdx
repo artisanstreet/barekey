@@ -33,13 +33,13 @@ Model the capability with an effect service and provide a live layer:
 ```ts name="src/lib/client/browser-storage.ts" icon="ts"
 import { Context, Effect, Layer } from "effect";
 
-export class BrowserStorage extends Context.Tag("BrowserStorage")<
+export class BrowserStorage extends Context.Service<
 	BrowserStorage,
 	{
 		readonly get: (key: string) => Effect.Effect<string | null>;
 		readonly set: (key: string, value: string) => Effect.Effect<void>;
 	}
->() {}
+>()("BrowserStorage") {}
 
 export const BrowserStorageLive = Layer.succeed(BrowserStorage, {
 	get: (key) => Effect.sync(() => localStorage.getItem(key)),
@@ -79,6 +79,21 @@ export const init = () => {
 ```
 
 Never import a server-only layer into this hook. Keep secrets, database clients, and privileged APIs behind remote functions.
+
+## Services for one subtree
+
+The runtime layer is shared by every component. When a service belongs to one
+part of the component tree, such as the open workspace, provide it from that
+component with [`ts ProvideLayer`](/docs/ser/provide-layer). Its layer builds on
+top of the runtime layer and is released with the component.
+
+## During server rendering
+
+Since 5.0.0, awaited component effects also run while the page renders on the
+server. There they use the [server runtime](/docs/ser/server-runtime), not this
+one. Effects that need browser-only services belong in event handlers or
+`ser {#await yield* ...}` blocks, which only run in the browser. See
+[During server rendering](/docs/ser/client#during-server-rendering).
 
 ## Runtime lifecycle
 

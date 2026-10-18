@@ -23,7 +23,43 @@ The Dispatcher gives that operation a managed fiber. When a reactive input chang
 
 Events follow a slightly different rhythm. Script and markup operations return their values to Svelte, whereas each event starts a fresh fiber when it fires.
 
+### Aborted work is interrupted
+
+> [!NOTE] Since 5.0.0
+> SER interrupts a pending component effect when Svelte aborts the derived or
+> block that started it.
+
+Svelte aborts async work it no longer needs: a derived reruns with new inputs,
+an `svelte {#if}` branch closes, or a keyed block is replaced. SER listens to
+the same abort signal Svelte hands to `ts getAbortSignal()` and interrupts the
+pending fiber, running its finalizers. Treat interruption as normal, much as
+you would for a `ts fetch` started with that signal.
+
+Component effects also work inside Svelte's `ts fork()`. A forked update's
+speculative state reaches the effect, and when the fork commits, the result it
+already produced is shown without running the effect again.
+
 [Follow the generated operation through the Dispatcher](/docs/ser/dispatcher) to see how it handles cache identity and cleanup.
+
+## During server rendering
+
+> [!NOTE] Since 5.0.0
+> Awaited component effects run during SSR. Before 5.0.0, markup effects
+> rendered their server fallback without running.
+
+Server rendering now runs awaited component effects, such as markup
+expressions and `ser $derived(yield* ...)` initializers, so the HTML arrives
+with their values. If one fails on the server, its fallback renders instead.
+Like a native `ts await`, the browser then runs the effect again while it
+hydrates the page.
+
+`ser {#await yield* ...}` blocks are the exception: they stay pending during
+SSR and resolve in the browser.
+
+During SSR these effects run on the [server runtime](/docs/ser/server-runtime),
+so a service that only `ts ClientRuntime.make(...)` provides is unavailable
+there. To reuse a server result instead of running the effect a second time,
+wrap it in [`ts Hydratable`](/docs/ser/hydratable).
 
 ## Script
 
