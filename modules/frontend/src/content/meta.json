@@ -60,6 +60,18 @@
 							"name": "Dispatcher",
 							"path": "ser/dispatcher.mdx"
 						}
+					},
+					{
+						"hydratable": {
+							"name": "Hydratable",
+							"path": "ser/hydratable.mdx"
+						}
+					},
+					{
+						"provide-layer": {
+							"name": "ProvideLayer",
+							"path": "ser/provide-layer.mdx"
+						}
 					}
 				]
 			},
@@ -101,6 +113,12 @@
 							"name": "Redirect",
 							"path": "ser/remote-functions/redirect.mdx"
 						}
+					},
+					{
+						"requested": {
+							"name": "Requested",
+							"path": "ser/remote-functions/requested.mdx"
+						}
 					}
 				]
 			},
@@ -110,6 +128,12 @@
 						"handler": {
 							"name": "Handler",
 							"path": "ser/remote-functions/handler.mdx"
+						}
+					},
+					{
+						"handle-error": {
+							"name": "HandleError",
+							"path": "ser/remote-functions/handle-error.mdx"
 						}
 					}
 				]

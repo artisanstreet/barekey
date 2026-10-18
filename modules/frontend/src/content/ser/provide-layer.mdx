@@ -1,0 +1,129 @@
+---
+title: "ProvideLayer"
+description: "Give one component subtree its own effect services."
+---
+
+> [!NOTE] Since 5.0.0
+> `ts ProvideLayer` requires `svelte-effect-runtime` 5.0.0. It is built on
+> Svelte's `ts createContext`.
+
+Most services belong to the whole app, so they live in the layer passed to
+[`ts ClientRuntime.make(...)`](/docs/ser/client-runtime). Some services only
+make sense below one component, though. A workspace page might need a client
+scoped to the open workspace, and every panel inside it should use that same
+client.
+
+`ts ProvideLayer(layer)` builds a layer for one component instance and gives its
+services to the SER effects of every component below it. Think of it as
+`ts setContext` for effect services.
+
+## Provide a layer
+
+Define the service as usual. Its layer may depend on services from the runtime
+layer:
+
+```ts name="src/lib/workspace.ts" icon="ts"
+import { Context, Effect, Layer } from "effect";
+import { ApiClient } from "$lib/client/api-client";
+
+export class Workspace extends Context.Service<
+	Workspace,
+	{
+		readonly id: string;
+		readonly members: Effect.Effect<ReadonlyArray<Member>, ApiError>;
+	}
+>()("Workspace") {
+	static layer = (workspace_id: string) =>
+		Layer.effect(
+			Workspace,
+			Effect.gen(function* () {
+				const api = yield* ApiClient;
+
+				return {
+					id: workspace_id,
+					members: api.list_members(workspace_id),
+				};
+			}),
+		);
+}
+```
+
+Call `ts ProvideLayer` during component initialisation, in the same place you
+would call `ts setContext`:
+
+```ser name="workspace-page.svelte" icon="svelte"
+<script lang="ts" effect>
+	import { ProvideLayer } from "svelte-effect-runtime";
+	import { Workspace } from "$lib/workspace";
+	import WorkspaceSidebar from "./workspace-sidebar.svelte";
+
+	let { workspace_id }: { workspace_id: string } = $props();
+
+	ProvideLayer(Workspace.layer(workspace_id));
+</script>
+
+<WorkspaceSidebar />
+```
+
+Any descendant can now yield the service:
+
+```ser name="workspace-sidebar.svelte" icon="svelte"
+<script lang="ts" effect>
+	import { Workspace } from "$lib/workspace";
+
+	const workspace = yield* Workspace;
+	const members = yield* workspace.members;
+</script>
+
+{#each members as member}
+	<p>{member.name}</p>
+{/each}
+```
+
+## Descendants only
+
+The services reach components below the provider, not the provider itself. An
+effect in `svelte WorkspacePage` cannot yield `ts Workspace`; move the code that
+needs it into a child component.
+
+## Lifetime
+
+The layer is built once per component instance, from the values it had at
+initialisation, and released when the component is destroyed. Resources the
+layer acquires, such as a socket opened with `ts Effect.acquireRelease`, close
+with it.
+
+Because the layer is not rebuilt when props change, key the provider when its
+inputs should produce a fresh layer:
+
+```ser
+{#key workspace_id}
+	<WorkspacePage {workspace_id} />
+{/key}
+```
+
+## Nested providers
+
+Providers stack. An inner layer may require services from an outer
+`ts ProvideLayer` as well as from the runtime layer, and descendants of the
+inner provider see all of them:
+
+```ser name="project-page.svelte" icon="svelte"
+<script lang="ts" effect>
+	import { ProvideLayer } from "svelte-effect-runtime";
+	import { Project } from "$lib/project";
+
+	let { project_id }: { project_id: string } = $props();
+
+	/** Project.layer yields Workspace from the provider above. */
+	ProvideLayer(Project.layer(project_id));
+</script>
+
+<ProjectBoard />
+```
+
+## When to use it
+
+Prefer the runtime layer for services the whole app shares. Reach for
+`ts ProvideLayer` only when a service is genuinely tied to one part of the
+component tree, such as the open workspace, document, or conversation.

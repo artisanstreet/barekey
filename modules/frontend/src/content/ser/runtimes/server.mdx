@@ -3,7 +3,12 @@ title: "Server runtime"
 description: "Provide server services and request context to remote handlers."
 ---
 
-`ts ServerRuntime` executes the effect returned by every `ts Query`, `ts Command`, `ts Form`, and `ts Prerender` handler.
+`ts ServerRuntime` executes the effect returned by every `ts Query`, `ts Command`, `ts Form`, and `ts Prerender` handler, as well as [`ts Handler`](/docs/ser/handler) endpoints and the [`ts HandleError`](/docs/ser/handle-error) hook.
+
+> [!NOTE] Since 5.0.0
+> Awaited component effects run during SSR, and they run on this runtime. Any
+> service such an effect yields during server rendering must be in the server
+> layer. `ts HandleError` also requires 5.0.0.
 
 Use it for long-lived server capabilities such as database pools, API clients, logging, queues, and configuration.
 
@@ -96,6 +101,22 @@ export const get_post = Query(Schema.String, (slug) =>
 ```
 
 Use typed effect failures for expected domain cases the client can recover from. Use `ts Error` and `ts Redirect` when SvelteKit should take over HTTP control flow.
+
+## Report unexpected errors
+
+Unexpected failures, such as defects, reach SvelteKit's `ts handleError` hook. Write it with [`ts HandleError`](/docs/ser/handle-error) to report them through services from this runtime:
+
+```ts name="src/hooks.server.ts" icon="ts"
+import type { HandleServerError } from "@sveltejs/kit/hooks";
+import { Effect } from "effect";
+import { HandleError } from "svelte-effect-runtime";
+
+export const handleError = HandleError<HandleServerError>(function* ({ error, event }) {
+	yield* Effect.logError("request failed", event.url.pathname, error);
+
+	return { message: "Something went wrong" };
+});
+```
 
 ## Prerender and development
 

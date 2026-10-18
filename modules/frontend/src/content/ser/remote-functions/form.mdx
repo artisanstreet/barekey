@@ -149,6 +149,16 @@ SER preserves SvelteKit form helpers and adapts effectful operations:
 
 Enhancement should improve feedback, not become the only path that can submit the data.
 
+A submission can also list queries with `ts .updates(...)`, and the handler
+answers them with [Requested](/docs/ser/requested), just like a
+[Command](/docs/ser/command#update-queries-in-the-same-request).
+
+> [!NOTE] Since 5.0.0
+> On SvelteKit 3, when a form submission redirects, SER navigates with
+> SvelteKit's `ts refreshAll` option instead of the deprecated `ts invalidateAll`.
+> Checkbox and radio fields also accept SvelteKit 3's trailing `ts checked`
+> argument in `ts field.as(type, value, checked)`.
+
 ## Request context
 
 Yield `ts RequestEvent` inside the handler for cookies, locals, or request metadata. Keep long-lived dependencies such as repositories in the [server runtime](/docs/ser/server-runtime).

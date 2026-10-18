@@ -12,6 +12,22 @@ SER only needs one package, but we recommend installing both of these:
 
 Install both, then wire `ts effect()` through composer in `icon="vite" vite.config.ts`.
 
+## Requirements
+
+> [!NOTE] Since 5.0.0
+> SER 5.0.0 targets the stable releases of Effect 4 and SvelteKit 3, and
+> requires Svelte `ts 5.44.0` or later.
+
+SER relies on these peer dependencies, which your SvelteKit app provides:
+
+| Package                           | Supported versions          |
+| --------------------------------- | --------------------------- |
+| `ts svelte`                       | `ts ^5.44.0`                |
+| `ts @sveltejs/kit`                | `ts ^2.69.0` or `ts ^3.0.0` |
+| `ts effect`                       | `ts ^4.0.0`                 |
+| `ts @sveltejs/vite-plugin-svelte` | `ts ^6.0.0` or `ts ^7.0.0`  |
+| `ts vite`                         | `ts ^7.0.0` or `ts ^8.0.0`  |
+
 ## Installing
 
 Install the packages with your package manager.

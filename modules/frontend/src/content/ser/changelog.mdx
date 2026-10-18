@@ -3,6 +3,128 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 5.0.0
+
+### Breaking changes
+
+#### Query `set` and `withOverride` return effects
+
+`ts query.set(value)` and `ts query.withOverride(update)` used to act as soon as
+they were called. Both now return effects, matching `ts refresh()`, so a
+discarded call does nothing. `ts withOverride` returns an
+`ts EffectRemoteQueryOverride`: yield it to apply the override and receive its
+release function, or pass it un-yielded to `ts .updates(...)` so it applies when
+the command runs and is released when the command settles.
+
+To migrate, yield every `ts set` and standalone `ts withOverride` call:
+
+```ts diff
+-- GetPost(slug).set(post);
+++ yield* GetPost(slug).set(post);
+```
+
+Overrides passed to `ts .updates(...)` need no change. See
+[Setting and overriding](/docs/ser/query#setting-and-overriding).
+
+#### Component effects run during SSR
+
+Markup effects that used to render a server fallback without running now run
+during server rendering, so the HTML includes their values. The fallback renders
+only if the effect fails on the server. Like a native `ts await`, the browser
+runs the effect again while it hydrates. `ser {#await yield* ...}` blocks still
+stay pending during SSR.
+
+To migrate, check component effects that should never run on the server:
+
+- Services they yield during SSR come from `ts ServerRuntime.make(...)`, not the
+  client runtime. Add them to the server layer, or move browser-only work into
+  an event handler or an `ser {#await yield* ...}` block.
+- To reuse a server result instead of running the effect twice, wrap it in
+  [`ts Hydratable`](/docs/ser/hydratable).
+
+See [During server rendering](/docs/ser/client#during-server-rendering).
+
+#### Peer dependency ranges
+
+SER now targets the stable releases of Effect 4 and SvelteKit 3:
+
+| Package            | 5.0.0                       |
+| ------------------ | --------------------------- |
+| `ts svelte`        | `ts ^5.44.0`                |
+| `ts @sveltejs/kit` | `ts ^2.69.0` or `ts ^3.0.0` |
+| `ts effect`        | `ts ^4.0.0`                 |
+
+To migrate, upgrade Svelte to `ts 5.44.0` or later and move off Effect 4 beta
+and SvelteKit 3 prereleases.
+
+### Requested answers client-requested refreshes
+
+`ts Requested(query, limit)` lists the instances of a query that the client
+asked a command or form to refresh with `ts .updates(...)`. Each entry carries
+the validated argument, the query bound to that client's cache entry, and an
+`ts ignore` effect. `ts Requested.refreshAll`, `ts Requested.reconnectAll`, and
+`ts Requested.ignoreAll` cover the common cases. On SvelteKit 3, every requested
+instance must be refreshed, set, reconnected, or ignored.
+
+```ts
+export const CreatePost = Command(PostInput, (input) =>
+	Effect.gen(function* () {
+		yield* Posts.create(input);
+
+		for (const { arg, query, ignore } of yield* Requested(GetPosts, 10)) {
+			yield* arg.author === input.author ? query.refresh() : ignore;
+		}
+	}),
+);
+```
+
+See [Requested](/docs/ser/requested).
+
+### HandleError adapts the server error hook
+
+`ts HandleError` writes SvelteKit's `ts handleError` server hook as an effect,
+running on the server runtime with `ts RequestEvent` provided. Unlike
+`ts Handler`, it is not interrupted when the request aborts.
+
+See [HandleError](/docs/ser/handle-error).
+
+### Hydratable reuses server results
+
+`ts Hydratable(key, effect)` is the effect counterpart of Svelte's
+`ts hydratable`. The server embeds the effect's result in the page, and the
+hydrating client reuses it instead of running the effect again. It applies when
+it is the first effect a component expression yields and requires
+`ts experimental.async`.
+
+See [Hydratable](/docs/ser/hydratable).
+
+### ProvideLayer scopes services to a subtree
+
+`ts ProvideLayer(layer)` builds a layer once per component instance and gives
+its services to SER effects in descendant components, releasing it when the
+component is destroyed. Nested providers stack, and inner layers may depend on
+outer services.
+
+See [ProvideLayer](/docs/ser/provide-layer).
+
+### Aborts and forks
+
+When Svelte aborts the derived or block that started a component effect, such as
+a rerun with new inputs or an `svelte {#if}` branch closing, SER interrupts the
+pending fiber. Effects inside Svelte's `ts fork()` see the forked state, and a
+committed fork shows the result without running the effect again.
+
+### SvelteKit 3 forms
+
+Form redirects on SvelteKit 3 navigate with `ts refreshAll` instead of the
+deprecated `ts invalidateAll`. Checkbox and radio `ts field.as(...)` calls accept
+SvelteKit 3's trailing `ts checked` argument.
+
+### Fixes
+
+- Component scopes are now released after each server render. They previously
+  stayed alive on the server after the response was sent.
+
 ## 4.2.8
 
 ### Remote filename detection
@@ -34,7 +156,6 @@ externalizes it, while leaving the adapter's other externals intact. Moving
 Package repository URLs now match the renamed GitHub organization so npm can
 verify publication provenance. This release includes the changes prepared for
 4.2.5, which did not finish publication.
-
 
 ### SvelteKit 3 prereleases through next.25
 

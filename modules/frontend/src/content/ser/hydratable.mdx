@@ -1,0 +1,97 @@
+---
+title: "Hydratable"
+description: "Reuse a component effect's server-rendered result while the page hydrates."
+---
+
+> [!NOTE] Since 5.0.0
+> `ts Hydratable` requires `svelte-effect-runtime` 5.0.0, Svelte `ts 5.44.0` or
+> later, and Svelte's `ts experimental.async` compiler option.
+
+Since 5.0.0, awaited component effects run during server rendering, and the
+browser runs them again while it hydrates the page. That is how a native
+`ts await` in a Svelte component behaves, and it is the safe default: an effect
+that reads the browser always sees the browser.
+
+Some effects return the same value wherever they run. Running a forecast lookup
+twice, once to render the HTML and once more to hydrate it, wastes a request and
+can briefly show a loading state the server already filled in.
+
+`ts Hydratable(key, effect)` is the effect counterpart of Svelte's
+`ts hydratable(key, fn)`. The server runs the effect and embeds its result in
+the page under `ts key`. The hydrating client finds that result and uses it
+instead of running the effect again.
+
+```ser name="forecast.svelte" icon="svelte"
+<script lang="ts" effect>
+	import { Hydratable } from "svelte-effect-runtime";
+	import { Weather } from "$lib/weather";
+
+	let { city }: { city: string } = $props();
+
+	const forecast = $derived(yield* Hydratable(`forecast:${city}`, Weather.forecast(city)));
+</script>
+
+<h2>{forecast.summary}</h2>
+<p>{yield* Hydratable(`alerts:${city}`, Weather.alerts(city))}</p>
+```
+
+After hydration the effect behaves normally. When `ts city` changes, both
+expressions run again in the browser.
+
+## Where it applies
+
+`ts Hydratable` takes effect when it is the first effect a component expression
+yields:
+
+```ser
+{yield* Hydratable("profile", LoadProfile())}
+```
+
+```ser
+<script lang="ts" effect>
+	const profile = $derived(yield* Hydratable("profile", LoadProfile()));
+</script>
+```
+
+Anywhere else, such as inside a larger `ts Effect.gen` or after another
+`ser yield*` in the same expression, it simply runs the wrapped effect.
+
+## Choose the key
+
+The key identifies the result in the page, so it must be unique per value.
+Include every input the effect depends on:
+
+```ts
+Hydratable(`forecast:${city}`, Weather.forecast(city));
+Hydratable(`invoice:${account_id}:${invoice_id}`, Billing.invoice(account_id, invoice_id));
+```
+
+Two expressions that share a key would receive the same server result.
+
+## When the client runs it anyway
+
+The server embeds results with `ts devalue`. A value it cannot serialize, such
+as an object holding functions or a class instance, is not embedded, and the
+client runs the effect again. An effect that fails on the server is not embedded
+either, so the client gets its own attempt.
+
+## When not to use it
+
+Only wrap effects whose result is the same on the server and in the browser.
+Anything that reads the environment must keep running on the client:
+
+```ser
+<!-- Wrong: the server's answer would replace the browser's. -->
+<p>{yield* Hydratable("theme", ReadSavedTheme())}</p>
+<p>{yield* Hydratable("now", Effect.sync(() => Date.now()))}</p>
+
+<!-- Right: these run again while hydrating. -->
+<p>{yield* ReadSavedTheme()}</p>
+<p>{yield* Effect.sync(() => Date.now())}</p>
+```
+
+Local storage, `ts window`, the viewport, the current time, and random values
+all differ between the two renders.
+
+Remote [Query](/docs/ser/query) results do not need `ts Hydratable`. SvelteKit
+already serializes them into the page and reuses them while hydrating.

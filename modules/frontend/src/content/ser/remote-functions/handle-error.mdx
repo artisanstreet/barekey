@@ -1,0 +1,71 @@
+---
+title: "HandleError"
+description: "Write SvelteKit's server handleError hook as an effect."
+---
+
+> [!NOTE] Since 5.0.0
+> `ts HandleError` requires `svelte-effect-runtime` 5.0.0.
+
+When a load function, endpoint, or remote function throws something SvelteKit
+did not expect, it calls the `ts handleError` hook in `src/hooks.server.ts`.
+That is where most apps report the failure and decide which message the user
+sees.
+
+`ts HandleError` lets you write that hook as an Effect. It works like
+[`ts Handler`](/docs/ser/handler): SvelteKit still calls the hook and reads its
+result, and SER runs the work inside it.
+
+```ts name="src/hooks.server.ts" icon="ts"
+import type { HandleServerError } from "@sveltejs/kit/hooks";
+import { Effect } from "effect";
+import { HandleError } from "svelte-effect-runtime";
+
+export const handleError = HandleError<HandleServerError>(function* ({ error, event }) {
+	yield* Effect.logError("request failed", event.url.pathname, error);
+
+	return { message: "Something went wrong" };
+});
+```
+
+Pass SvelteKit's `ts HandleServerError` type so the callback receives the hook's
+usual input (`ts error`, `ts event`, `ts status`, and `ts message`) and must
+succeed with your app's `ts App.Error` shape. As with `ts Handler`, the callback
+may be a generator or return an Effect directly.
+
+## Runtime and request scope
+
+The hook runs through the [server runtime](/docs/ser/server-runtime), so it can
+use the logging, telemetry, or error-reporting services installed with
+`ts ServerRuntime.make(...)`. The failing request is provided as the
+[RequestEvent](/docs/ser/request-event) service:
+
+```ts name="src/hooks.server.ts" icon="ts"
+import type { HandleServerError } from "@sveltejs/kit/hooks";
+import { HandleError, RequestEvent } from "svelte-effect-runtime";
+import { ErrorReporter } from "$lib/server/error-reporter";
+
+export const handleError = HandleError<HandleServerError>(function* ({ error, status }) {
+	const event = yield* RequestEvent;
+	const reporter = yield* ErrorReporter;
+
+	const report_id = yield* reporter.capture(error, {
+		route: event.route.id,
+		status,
+	});
+
+	return { message: "Something went wrong", report_id };
+});
+```
+
+Add any extra fields such as `ts report_id` to `ts App.Error` in `src/app.d.ts`
+so the returned body type checks.
+
+## Recover every failure
+
+The hook is the last stop for an error, so its Effect has no typed error
+channel. Recover failures from your reporting services inside the callback,
+for example with `ts Effect.catch`, and always return an error body.
+
+Unlike `ts Handler`, the hook is not interrupted when the request aborts. A
+client that disconnects mid-request still gets its error reported, and
+SvelteKit always receives the body.
