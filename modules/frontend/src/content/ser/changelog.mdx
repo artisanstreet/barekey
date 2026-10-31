@@ -3,6 +3,20 @@ title: "Changelog"
 description: "Follow the changes included in each SER release."
 ---
 
+## 5.0.1
+
+### Development builds load in the browser again
+
+In 5.0.0, the root `ts svelte-effect-runtime` entrypoint loaded a compiler
+module that imported `ts node:fs/promises` at the top level. `ts vite dev`
+serves packages to the browser as unbundled modules, so any page that loaded
+the client runtime failed with
+`ts Module "node:fs/promises" has been externalized for browser compatibility`.
+Production builds were not affected.
+
+The compiler now loads `ts node:fs/promises` only when the Vite plugin needs it,
+so the root entrypoint no longer imports Node built-ins in the browser.
+
 ## 5.0.0
 
 ### Breaking changes
